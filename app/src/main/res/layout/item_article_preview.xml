@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/ivArticleImage"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="28sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textColor="@android:color/black"
+        android:fontFamily="@font/queen_park_bold"
+        tools:text="Lorem ipsum dolor sit amet consectetur adi" />
+
+    <TextView
+        android:id="@+id/tvDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="22sp"
+        android:maxLines="5"
+        android:ellipsize="end"
+        android:fontFamily="@font/queen_park_regular"
+        android:textColor="@android:color/black"
+        tools:text="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusan ium doloremque laudan..." />
+
+    <TextView
+        android:id="@+id/tvPublishedAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/publishedAtColor"
+        tools:text="29-03-21"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:textAllCaps="false"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:backgroundTint="@color/buttonColor"
+            android:background="@color/buttonColor"
+            android:text="Read"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:layout_marginStart="32dp"
+            android:gravity="center"
+            android:textAllCaps="false"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:backgroundTint="@color/buttonColor"
+            android:background="@color/buttonColor"
+            android:text="Save"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@color/publishedAtColor"
+        />
+
+</LinearLayout>

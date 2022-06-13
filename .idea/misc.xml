@@ -3,7 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Projects/NewsBreeze/NewsBreeze/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Projects/NewsBreeze/NewsBreeze/app/src/main/res/drawable/button_backgroound.xml" value="0.1" />
+        <entry key="..\:/Projects/NewsBreeze/NewsBreeze/app/src/main/res/layout/activity_bookmark.xml" value="0.209375" />
+        <entry key="..\:/Projects/NewsBreeze/NewsBreeze/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Projects/NewsBreeze/NewsBreeze/app/src/main/res/layout/activity_news_detail.xml" value="0.1" />
         <entry key="..\:/Projects/NewsBreeze/NewsBreeze/app/src/main/res/layout/item_article_preview.xml" value="0.1" />
         <entry key="..\:/Projects/NewzBreeze/app/src/main/res/drawable/button_background.xml" value="0.1" />
         <entry key="..\:/Projects/NewzBreeze/app/src/main/res/layout/activity_main.xml" value="0.1" />

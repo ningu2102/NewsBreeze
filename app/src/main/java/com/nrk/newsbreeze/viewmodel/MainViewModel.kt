@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nrk.newsbreeze.data.model.Article
 import com.nrk.newsbreeze.data.model.NewsResponse
 import com.nrk.newsbreeze.repository.NewsRepository
 import com.nrk.newsbreeze.utils.NetworkUtil.Companion.hasInternetConnection
@@ -69,4 +70,7 @@ class MainViewModel @Inject constructor(
         return Resource.Error(response.message())
     }
 
+    suspend fun saveNews(article: Article): Long{
+        return newsRepository.insertArticle(article)
+    }
 }

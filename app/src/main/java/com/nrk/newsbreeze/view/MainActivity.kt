@@ -1,16 +1,16 @@
 package com.nrk.newsbreeze.view
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AbsListView
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.nrk.newsbreeze.R
 import com.nrk.newsbreeze.data.model.Article
 import com.nrk.newsbreeze.databinding.ActivityMainBinding
 import com.nrk.newsbreeze.utils.QUERY_PAGE_SIZE
@@ -18,6 +18,8 @@ import com.nrk.newsbreeze.utils.Resource
 import com.nrk.newsbreeze.view.adapter.ArticlesAdapter
 import com.nrk.newsbreeze.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
@@ -27,16 +29,19 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
     var isLastPage = false
     var isScrolling = false
 
-    override fun onResume() {
-        super.onResume()
-//        viewModel.getBreakingNews("tr")
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar!!.hide();
+        setUi()
         setupRecyclerView()
+    }
+
+    private fun setUi() {
+        binding.ivBookmark.setOnClickListener{
+            startActivity(Intent(this@MainActivity, BookmarkActivity::class.java))
+        }
     }
 
     private fun setupRecyclerView() {
@@ -51,7 +56,7 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
         }
 
         viewModel.breakingNews.observe(this) {
-            when(it){
+            when (it) {
                 is Resource.Success -> {
                     binding.paginationProgressBar.visibility = View.INVISIBLE
                     isLoading = false
@@ -59,8 +64,8 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
                         articleAdapter.submitList(newsResponse.articles.toList())
                         val totalPages = newsResponse.totalResults / QUERY_PAGE_SIZE + 2
                         isLastPage = viewModel.breakingNewsPage == totalPages
-                        if(isLastPage)
-                            binding.rvBreakingNews.setPadding(0,0,0,0)
+                        if (isLastPage)
+                            binding.rvBreakingNews.setPadding(0, 0, 0, 0)
                     }
                 }
                 is Resource.Error -> {
@@ -81,7 +86,7 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
     private val scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
-            if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){ //State is scrolling
+            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) { //State is scrolling
                 isScrolling = true
             }
         }
@@ -98,9 +103,10 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
             val isAtLastItem = firstVisibleItemPosition + totalVisibleItemCount >= totalItemCount
             val isNotAtBeginning = firstVisibleItemPosition >= 0
             val isTotalMoreThanVisible = totalItemCount >= QUERY_PAGE_SIZE
-            val shouldPaginate = isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning && isTotalMoreThanVisible && isScrolling
+            val shouldPaginate =
+                isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning && isTotalMoreThanVisible && isScrolling
 
-            if(shouldPaginate){
+            if (shouldPaginate) {
                 viewModel.getBreakingNews("tr")
                 isScrolling = false
             }
@@ -108,8 +114,38 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
     }
 
 
-    override fun onItemClick(article: Article) {
-//        val action = BreakingNewsFragmentDirections.actionBreakingNewsFragmentToArticleFragment(article)
-//        findNavController().navigate(action)
+    override fun onItemClicked(article: Article) {
+//        article.id = 10
+        var selectedArticle = article
+        selectedArticle.id = 10
+        var intent: Intent = Intent(this@MainActivity, NewsDetailActivity::class.java)
+        intent.putExtra("selectedArticle", selectedArticle)
+        startActivity(intent)
+    }
+
+    override fun onReadClicked(article: Article) {
+
+
+    }
+
+    override fun onSaveClicked(article: Article) {
+        this.lifecycleScope.launch(Dispatchers.IO) {
+            var response = viewModel.saveNews(article)
+            lifecycleScope.launch(Dispatchers.Main) {
+                if (response != 0L) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Article saved successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Article not saved successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 }

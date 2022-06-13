@@ -29,7 +29,21 @@ class ArticlesAdapter(private val listener: OnItemClickListener): ListAdapter<Ar
                     val position = adapterPosition
                     if(position != RecyclerView.NO_POSITION){
                         val article = getItem(position)
-                        listener.onItemClick(article)
+                        listener.onItemClicked(article)
+                    }
+                }
+                btnRead.setOnClickListener {
+                    val position = adapterPosition
+                    if(position != RecyclerView.NO_POSITION){
+                        val article = getItem(position)
+                        listener.onReadClicked(article)
+                    }
+                }
+                btnSave.setOnClickListener {
+                    val position = adapterPosition
+                    if(position != RecyclerView.NO_POSITION){
+                        val article = getItem(position)
+                        listener.onSaveClicked(article)
                     }
                 }
             }
@@ -43,13 +57,22 @@ class ArticlesAdapter(private val listener: OnItemClickListener): ListAdapter<Ar
                 tvDescription.text = article.description
                 tvTitle.text = article.title
                 tvPublishedAt.text = DateUtil.changeDateFormat(article.publishedAt)
+//                btnRead.setOnClickListener {
+//                    var intent: Intent = Intent(, NewsDetailActivity::class.java)
+//                    intent.putExtra("selectedArticle", article)
+//                    startActivity(intent)
+//                }
 //                tvSource.text = article.source?.name
             }
         }
     }
 
     interface OnItemClickListener{
-        fun onItemClick(article: Article)
+        fun onItemClicked(article: Article)
+
+        fun onReadClicked(article: Article)
+
+        fun onSaveClicked(article: Article)
     }
 
 

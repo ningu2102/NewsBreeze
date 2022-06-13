@@ -1,16 +1,16 @@
 package com.nrk.newsbreeze.data.model
 
+import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.nrk.newsbreeze.utils.DateUtil
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @Entity(tableName = "article_table")
 data class Article(
     @PrimaryKey(autoGenerate = true)
-    var id : Int? = null,
+    var id: Int? = null,
     val author: String?,
     val content: String?,
     val description: String?,
@@ -19,5 +19,4 @@ data class Article(
     val title: String?,
     val url: String?,
     val urlToImage: String?
-): Parcelable{
-}
+): Parcelable

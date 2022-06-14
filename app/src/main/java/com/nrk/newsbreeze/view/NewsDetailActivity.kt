@@ -1,8 +1,6 @@
 package com.nrk.newsbreeze.view
 
 import android.os.Bundle
-import android.view.Window
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -42,7 +40,7 @@ class NewsDetailActivity : AppCompatActivity() {
 
     private fun setUi() {
         binding.apply {
-            ivBack.setOnClickListener{
+            ivBack.setOnClickListener {
                 onBackPressed()
             }
 

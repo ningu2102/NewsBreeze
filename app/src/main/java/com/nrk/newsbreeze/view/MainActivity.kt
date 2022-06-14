@@ -3,19 +3,17 @@ package com.nrk.newsbreeze.view
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.View
-import android.widget.AbsListView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.nrk.newsbreeze.data.model.Article
 import com.nrk.newsbreeze.data.model.LocalArticle
 import com.nrk.newsbreeze.databinding.ActivityMainBinding
-import com.nrk.newsbreeze.utils.QUERY_PAGE_SIZE
 import com.nrk.newsbreeze.utils.Resource
 import com.nrk.newsbreeze.view.adapter.ArticlesAdapter
 import com.nrk.newsbreeze.viewmodel.MainViewModel
@@ -36,7 +34,7 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar!!.hide();
+        supportActionBar!!.hide()
         setUi()
         setupRecyclerView()
         setupData()
@@ -49,8 +47,28 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
     }
 
     private fun setUi() {
-        binding.ivBookmark.setOnClickListener{
-            startActivity(Intent(this@MainActivity, BookmarkActivity::class.java))
+        binding.apply {
+
+            ivBookmark.setOnClickListener {
+                startActivity(Intent(this@MainActivity, BookmarkActivity::class.java))
+            }
+
+            svQuery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    if (newText.isEmpty()) {
+                        Log.i("SearchQuery", "onQueryTextChange: EMPTY")
+                        articleAdapter.filter!!.filter("")
+                    } else {
+                        Log.i("SearchQuery", "onQueryTextChange: search text is $newText")
+                        articleAdapter.filter!!.filter(newText)
+                    }
+                    return true
+                }
+            })
         }
     }
 
@@ -67,16 +85,17 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
         viewModel.breakingNews.observe(this) {
             when (it) {
                 is Resource.Success -> {
-                    binding.paginationProgressBar.visibility = View.INVISIBLE
+                    binding.progrssBar.visibility = View.INVISIBLE
                     isLoading = false
                     it.data?.let { newsResponse ->
                         articles = newsResponse.articles
                         updateListParameters()
-                        articleAdapter.submitList(newsResponse.articles.toList())
+                        articleAdapter.submitList(newsResponse.articles.toMutableList())
+                        articleAdapter.setList(newsResponse.articles.toMutableList())
                     }
                 }
                 is Resource.Error -> {
-                    binding.paginationProgressBar.visibility = View.INVISIBLE
+                    binding.progrssBar.visibility = View.INVISIBLE
                     isLoading = true
                     it.message?.let { message ->
                         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
@@ -84,18 +103,18 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
                     }
                 }
                 is Resource.Loading -> {
-                    binding.paginationProgressBar.visibility = View.VISIBLE
+                    binding.progrssBar.visibility = View.VISIBLE
                 }
             }
         }
     }
 
     private fun updateListParameters() {
-        if(!localArticles.isNullOrEmpty()){
-            for (article in articles){
+        if (!localArticles.isNullOrEmpty()) {
+            for (article in articles) {
                 article.isSaved = localArticles.filter { s -> s.url == article.url }.size == 1
             }
-            articleAdapter.submitList(articles.toList())
+            articleAdapter.submitList(articles.toMutableList())
         }
     }
 
@@ -108,6 +127,11 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
     }
 
     override fun onReadClicked(article: Article) {
+        val gson = Gson()
+        val intent = Intent(this, NewsDetailActivity::class.java)
+        intent.putExtra("selectedArticle", gson.toJson(article))
+        intent.putExtra("from", "main")
+        startActivity(intent)
     }
 
     override fun onSaveClicked(article: Article) {
@@ -115,8 +139,6 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
             var response = viewModel.saveNews(article)
             lifecycleScope.launch(Dispatchers.Main) {
                 if (response != 0L) {
-                    localArticles += 
-                    updateListParameters()
                     Toast.makeText(
                         this@MainActivity,
                         "Article saved successfully",
@@ -131,5 +153,9 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
                 }
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        return super.onCreateOptionsMenu(menu)
     }
 }

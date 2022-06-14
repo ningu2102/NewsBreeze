@@ -3,7 +3,9 @@ package com.nrk.newsbreeze.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
+import androidx.appcompat.widget.SearchView
 import com.google.gson.Gson
 import com.nrk.newsbreeze.R
 import com.nrk.newsbreeze.data.model.Article
@@ -26,16 +28,40 @@ class BookmarkActivity : AppCompatActivity(), BookmarkArticlesAdapter.OnItemClic
         binding = ActivityBookmarkBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar!!.hide()
-        binding.ivBack.setOnClickListener{
-            onBackPressed()
-        }
+        setupUi()
         setupRecyclerView()
         setupData()
+    }
+
+    private fun setupUi() {
+        binding.apply {
+
+            ivBack.setOnClickListener{
+                onBackPressed()
+            }
+            svQuery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    if (newText.isEmpty()) {
+                        Log.i("SearchQuery", "onQueryTextChange: EMPTY")
+                        articleAdapter.filter!!.filter("")
+                    } else {
+                        Log.i("SearchQuery", "onQueryTextChange: search text is $newText")
+                        articleAdapter.filter!!.filter(newText)
+                    }
+                    return true
+                }
+            })
+        }
     }
 
     private fun setupData() {
         viewModel.getAllArticles().observe(this) {
             articleAdapter.submitList(it)
+            articleAdapter.setList(it as MutableList<LocalArticle>)
         }
     }
 

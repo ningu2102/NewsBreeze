@@ -2,16 +2,23 @@ package com.nrk.newsbreeze.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.nrk.newsbreeze.data.model.Article
 import com.nrk.newsbreeze.data.model.LocalArticle
 import com.nrk.newsbreeze.databinding.BookmarkArticleItemPreviewBinding
 import com.nrk.newsbreeze.databinding.ItemArticlePreviewBinding
 import com.nrk.newsbreeze.utils.DateUtil
+import java.util.*
 
-class BookmarkArticlesAdapter(private val listener: OnItemClickListener): ListAdapter<LocalArticle, BookmarkArticlesAdapter.BookmarkArticleViewHolder>(DiffCallback()) {
+class BookmarkArticlesAdapter(private val listener: OnItemClickListener): ListAdapter<LocalArticle, BookmarkArticlesAdapter.BookmarkArticleViewHolder>(DiffCallback()),
+    Filterable {
+
+    private var fullList: List<LocalArticle>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookmarkArticleViewHolder {
         val binding = BookmarkArticleItemPreviewBinding.inflate(LayoutInflater.from(parent.context), parent,false)
@@ -21,6 +28,10 @@ class BookmarkArticlesAdapter(private val listener: OnItemClickListener): ListAd
     override fun onBindViewHolder(holder: BookmarkArticleViewHolder, position: Int) {
         val currentItem = getItem(position)
         holder.bind(currentItem)
+    }
+
+    fun setList(list: MutableList<LocalArticle>?) {
+        fullList = list
     }
 
     inner class BookmarkArticleViewHolder(private val binding: BookmarkArticleItemPreviewBinding): RecyclerView.ViewHolder(binding.root) {
@@ -45,12 +56,6 @@ class BookmarkArticlesAdapter(private val listener: OnItemClickListener): ListAd
                 tvDate.text = DateUtil.changeDateFormat(article.publishedAt)
                 tvAuthor.text = article.author
                 tvHashTag.text = "#" + article.source!!.name
-//                btnRead.setOnClickListener {
-//                    var intent: Intent = Intent(, NewsDetailActivity::class.java)
-//                    intent.putExtra("selectedArticle", article)
-//                    startActivity(intent)
-//                }
-//                tvSource.text = article.source?.name
             }
         }
     }
@@ -69,5 +74,35 @@ class BookmarkArticlesAdapter(private val listener: OnItemClickListener): ListAd
             return oldItem == newItem
         }
 
+    }
+
+
+    override fun getFilter(): Filter? {
+        return filter
+    }
+
+    private val filter: Filter = object : Filter() {
+        override fun performFiltering(constraint: CharSequence): FilterResults {
+            val filteredList: MutableList<LocalArticle> = ArrayList()
+            if (constraint.isEmpty()) {
+                fullList?.let { filteredList.addAll(it) }
+            } else {
+                val filterPattern =
+                    constraint.toString().lowercase(Locale.getDefault()).trim { it <= ' ' }
+                for (store in fullList!!) {
+                    if (store.title?.lowercase()!!.contains(filterPattern)) {
+                        filteredList.add(store)
+                    }
+                }
+            }
+            val results = FilterResults()
+            results.values = filteredList
+            return results
+        }
+
+        override fun publishResults(constraint: CharSequence, results: FilterResults) {
+            submitList(results.values as MutableList<LocalArticle>)
+//            notifyDataSetChanged()
+        }
     }
 }

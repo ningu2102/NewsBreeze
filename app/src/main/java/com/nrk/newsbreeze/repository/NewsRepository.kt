@@ -2,6 +2,7 @@ package com.nrk.newsbreeze.repository
 
 import com.nrk.newsbreeze.data.local.ArticleDao
 import com.nrk.newsbreeze.data.model.Article
+import com.nrk.newsbreeze.data.model.LocalArticle
 import com.nrk.newsbreeze.data.model.NewsResponse
 import com.nrk.newsbreeze.data.remote.NewsApi
 import retrofit2.Response
@@ -24,9 +25,9 @@ class NewsRepository @Inject constructor(
 
     fun getAllArticles() = articleDao.getArticles()
 
-    suspend fun insertArticle(article: Article) = articleDao.insert(article)
+    suspend fun insertArticle(article: LocalArticle) = articleDao.insert(article)
 
-    suspend fun deleteArticle(article: Article) = articleDao.delete(article)
+    suspend fun deleteArticle(article: LocalArticle) = articleDao.delete(article)
 
     suspend fun deleteAllArticles() = articleDao.deleteAllArticles()
 }

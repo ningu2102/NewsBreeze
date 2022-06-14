@@ -5,18 +5,20 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import com.nrk.newsbreeze.R
 import com.nrk.newsbreeze.data.model.Article
+import com.nrk.newsbreeze.data.model.LocalArticle
 import com.nrk.newsbreeze.databinding.ActivityBookmarkBinding
 import com.nrk.newsbreeze.databinding.ActivityNewsDetailBinding
 import com.nrk.newsbreeze.view.adapter.ArticlesAdapter
+import com.nrk.newsbreeze.view.adapter.BookmarkArticlesAdapter
 import com.nrk.newsbreeze.viewmodel.BookmarkViewModel
 import com.nrk.newsbreeze.viewmodel.NewsDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BookmarkActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
+class BookmarkActivity : AppCompatActivity(), BookmarkArticlesAdapter.OnItemClickListener {
     private val viewModel: BookmarkViewModel by viewModels()
     private lateinit var binding: ActivityBookmarkBinding
-    private lateinit var articleAdapter: ArticlesAdapter
+    private lateinit var articleAdapter: BookmarkArticlesAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBookmarkBinding.inflate(layoutInflater)
@@ -33,7 +35,7 @@ class BookmarkActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListene
     }
 
     private fun setupRecyclerView() {
-        articleAdapter = ArticlesAdapter(this)
+        articleAdapter = BookmarkArticlesAdapter(this)
         binding.apply {
             rvSavedNews.apply {
                 adapter = articleAdapter
@@ -42,13 +44,14 @@ class BookmarkActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListene
         }
     }
 
-    override fun onItemClicked(article: Article) {
+    override fun onItemClicked(article: LocalArticle) {
 
     }
 
-    override fun onReadClicked(article: Article) {
+    override fun onReadClicked(article: LocalArticle) {
+
     }
 
-    override fun onSaveClicked(article: Article) {
+    override fun onSaveClicked(article: LocalArticle) {
     }
 }

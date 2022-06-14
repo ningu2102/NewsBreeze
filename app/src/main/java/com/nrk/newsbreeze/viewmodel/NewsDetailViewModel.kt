@@ -3,6 +3,7 @@ package com.nrk.newsbreeze.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nrk.newsbreeze.data.mappers.ArticleToLocalArticleMapper
 import com.nrk.newsbreeze.data.model.Article
 import com.nrk.newsbreeze.repository.NewsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,6 +11,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,7 +25,10 @@ class NewsDetailViewModel @Inject constructor(
 
     fun saveArticle(article: Article) {
         viewModelScope.launch {
-            newsRepository.insertArticle(article)
+            val mapper = ArticleToLocalArticleMapper()
+            var localArticle = mapper.toLocalArticle(article)
+            localArticle.addedDate = Date()
+            newsRepository.insertArticle(localArticle)
             articleEventChannel.send(ArticleEvent.ShowArticleSavedMessage("Article Saved."))
         }
     }

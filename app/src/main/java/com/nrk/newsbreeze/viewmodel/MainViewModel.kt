@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nrk.newsbreeze.data.mappers.ArticleToLocalArticleMapper
 import com.nrk.newsbreeze.data.model.Article
 import com.nrk.newsbreeze.data.model.NewsResponse
 import com.nrk.newsbreeze.repository.NewsRepository
@@ -14,6 +15,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -71,6 +73,9 @@ class MainViewModel @Inject constructor(
     }
 
     suspend fun saveNews(article: Article): Long{
-        return newsRepository.insertArticle(article)
+        val mapper = ArticleToLocalArticleMapper()
+        var localArticle = mapper.toLocalArticle(article)
+        localArticle.addedDate = Date()
+        return newsRepository.insertArticle(localArticle)
     }
 }

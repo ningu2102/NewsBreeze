@@ -2,7 +2,7 @@
 <h1>NewsBreeze</h1>
 
 <p>  
-NewsBreeze is an unofficial newsApi client that gets the latest breaking news to you
+NewsBreeze is an unofficial newsapi client that gets the latest news to you
 </p>
 </br>
 

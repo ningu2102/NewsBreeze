@@ -6,6 +6,13 @@ NewsBreeze is an unofficial newsapi client that gets the latest news to you
 </p>
 </br>
 
+<p>
+<img src="https://github.com/ningu2102/NewsBreeze/blob/main/screenshots/screenshot_1.jpeg"/>
+<img src="https://github.com/ningu2102/NewsBreeze/blob/main/screenshots/screenshot_2.jpeg"/>
+<img src="https://github.com/ningu2102/NewsBreeze/blob/main/screenshots/screenshot_3.jpeg"/>
+</p>
+</br>
+
 
 ## Tech stack & Open-source libraries
 - Minimum SDK level 21

@@ -7,9 +7,9 @@ NewsBreeze is an unofficial newsapi client that gets the latest news to you
 </br>
 
 <p>
-<img src="https://github.com/ningu2102/NewsBreeze/blob/main/screenshots/screenshot_1.jpeg"/>
-<img src="https://github.com/ningu2102/NewsBreeze/blob/main/screenshots/screenshot_2.jpeg"/>
-<img src="https://github.com/ningu2102/NewsBreeze/blob/main/screenshots/screenshot_3.jpeg"/>
+<img src="https://github.com/ningu2102/NewsBreeze/blob/main/screenshots/screenshot_1.jpeg"/></br>
+<img src="https://github.com/ningu2102/NewsBreeze/blob/main/screenshots/screenshot_2.jpeg"/></br>
+<img src="https://github.com/ningu2102/NewsBreeze/blob/main/screenshots/screenshot_3.jpeg"/></br>
 </p>
 </br>
 

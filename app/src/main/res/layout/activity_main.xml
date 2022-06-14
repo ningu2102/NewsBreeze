@@ -59,12 +59,22 @@
 
         </androidx.cardview.widget.CardView>
 
+        <TextView
+            android:id="@+id/txtNoData"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:gravity="center"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvBreakingNews"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
+            android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_article_preview" />
 

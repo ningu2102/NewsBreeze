@@ -89,6 +89,10 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
                     isLoading = false
                     it.data?.let { newsResponse ->
                         articles = newsResponse.articles
+                        binding.apply {
+                            txtNoData.visibility = View.GONE
+                            rvBreakingNews.visibility = View.VISIBLE
+                        }
                         updateListParameters()
                         articleAdapter.submitList(newsResponse.articles.toMutableList())
                         articleAdapter.setList(newsResponse.articles.toMutableList())
@@ -98,8 +102,13 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
                     binding.progrssBar.visibility = View.INVISIBLE
                     isLoading = true
                     it.message?.let { message ->
-                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-                        Log.e("TAG", "Error: $message")
+                        binding.apply {
+                            txtNoData.visibility = View.VISIBLE
+                            rvBreakingNews.visibility = View.GONE
+                            txtNoData.text = "You have no internt connection, Please turn on the data and restart the app"
+                        }
+//                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+//                        Log.e("TAG", "Error: $message")
                     }
                 }
                 is Resource.Loading -> {

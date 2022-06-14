@@ -1,21 +1,17 @@
 package com.nrk.newsbreeze.view
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import com.google.gson.Gson
-import com.nrk.newsbreeze.R
-import com.nrk.newsbreeze.data.model.Article
 import com.nrk.newsbreeze.data.model.LocalArticle
 import com.nrk.newsbreeze.databinding.ActivityBookmarkBinding
-import com.nrk.newsbreeze.databinding.ActivityNewsDetailBinding
-import com.nrk.newsbreeze.view.adapter.ArticlesAdapter
 import com.nrk.newsbreeze.view.adapter.BookmarkArticlesAdapter
 import com.nrk.newsbreeze.viewmodel.BookmarkViewModel
-import com.nrk.newsbreeze.viewmodel.NewsDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,7 +32,7 @@ class BookmarkActivity : AppCompatActivity(), BookmarkArticlesAdapter.OnItemClic
     private fun setupUi() {
         binding.apply {
 
-            ivBack.setOnClickListener{
+            ivBack.setOnClickListener {
                 onBackPressed()
             }
             svQuery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -60,8 +56,19 @@ class BookmarkActivity : AppCompatActivity(), BookmarkArticlesAdapter.OnItemClic
 
     private fun setupData() {
         viewModel.getAllArticles().observe(this) {
-            articleAdapter.submitList(it)
-            articleAdapter.setList(it as MutableList<LocalArticle>)
+            binding.apply {
+                if (it.isEmpty()) {
+                    rvSavedNews.visibility = View.GONE
+                    ivDown.visibility = View.GONE
+                    txtNoData.visibility = View.VISIBLE
+                } else {
+                    rvSavedNews.visibility = View.VISIBLE
+                    ivDown.visibility = View.VISIBLE
+                    txtNoData.visibility = View.GONE
+                    articleAdapter.submitList(it)
+                    articleAdapter.setList(it as MutableList<LocalArticle>)
+                }
+            }
         }
     }
 

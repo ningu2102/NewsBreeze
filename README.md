@@ -1,4 +1,3 @@
-# NewsBreeze
 
 <h1>NewsBreeze</h1>
 

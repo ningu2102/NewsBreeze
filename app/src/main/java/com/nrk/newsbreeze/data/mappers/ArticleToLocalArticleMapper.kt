@@ -17,7 +17,8 @@ class ArticleToLocalArticleMapper {
             localArticle.source,
             localArticle.title,
             localArticle.url,
-            localArticle.urlToImage
+            localArticle.urlToImage,
+            null
         )
     }
 

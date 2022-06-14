@@ -10,9 +10,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:layout_marginBottom="20dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
+        android:layout_marginBottom="20dp"
         android:background="#A8E8E8F7" />
 
     <androidx.cardview.widget.CardView
@@ -20,11 +20,28 @@
         android:layout_height="match_parent"
         app:cardCornerRadius="8dp">
 
-    <ImageView
-        android:id="@+id/ivArticleImage"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:scaleType="centerCrop" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/ivArticleImage"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/ivSave"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="16dp"
+                android:layout_gravity="right"
+                android:padding="8dp"
+                android:background="@color/buttonColor"
+                android:src="@drawable/ic_saved" />
+
+        </FrameLayout>
+
 
     </androidx.cardview.widget.CardView>
 
@@ -34,20 +51,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:layout_marginBottom="9dp"
-        android:textSize="28sp"
-        android:maxLines="2"
         android:ellipsize="end"
+        android:maxLines="2"
         android:textColor="@android:color/black"
+        android:textSize="28sp"
         tools:text="Lorem ipsum dolor sit amet consectetur adi" />
 
     <TextView
         android:id="@+id/tvDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="22sp"
-        android:maxLines="5"
         android:ellipsize="end"
+        android:maxLines="5"
         android:textColor="@android:color/black"
+        android:textSize="22sp"
         tools:text="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusan ium doloremque laudan..." />
 
     <TextView
@@ -57,42 +74,42 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
         android:textColor="@color/publishedAtColor"
-        tools:text="29-03-21"/>
+        tools:text="29-03-21" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:gravity="center">
 
         <Button
             android:id="@+id/btnRead"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/button_background"
+            android:gravity="center"
+            android:text="Read"
+            android:textAlignment="center"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="12sp"
-            android:gravity="center"
-            android:textAllCaps="false"
-            android:layout_gravity="center"
-            android:textAlignment="center"
-            app:backgroundTint="@color/buttonColor"
-            android:background="@drawable/button_background"
-            android:text="Read"/>
+            app:backgroundTint="@color/buttonColor" />
 
         <Button
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="32dp"
+            android:background="@drawable/button_background"
+            android:gravity="center"
+            android:text="Save"
+            android:textAlignment="center"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="12sp"
-            android:layout_marginStart="32dp"
-            android:gravity="center"
-            android:textAllCaps="false"
-            android:layout_gravity="center"
-            android:textAlignment="center"
-            app:backgroundTint="@color/buttonColor"
-            android:background="@drawable/button_background"
-            android:text="Save" />
+            app:backgroundTint="@color/buttonColor" />
 
     </LinearLayout>
 

@@ -1,8 +1,10 @@
 package com.nrk.newsbreeze.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import com.google.gson.Gson
 import com.nrk.newsbreeze.R
 import com.nrk.newsbreeze.data.model.Article
 import com.nrk.newsbreeze.data.model.LocalArticle
@@ -24,6 +26,9 @@ class BookmarkActivity : AppCompatActivity(), BookmarkArticlesAdapter.OnItemClic
         binding = ActivityBookmarkBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar!!.hide()
+        binding.ivBack.setOnClickListener{
+            onBackPressed()
+        }
         setupRecyclerView()
         setupData()
     }
@@ -46,13 +51,10 @@ class BookmarkActivity : AppCompatActivity(), BookmarkArticlesAdapter.OnItemClic
     }
 
     override fun onItemClicked(article: LocalArticle) {
-
-    }
-
-    override fun onReadClicked(article: LocalArticle) {
-
-    }
-
-    override fun onSaveClicked(article: LocalArticle) {
+        val gson = Gson()
+        val intent = Intent(this, NewsDetailActivity::class.java)
+        intent.putExtra("from", "bookmark")
+        intent.putExtra("selectedSavedArticle", gson.toJson(article))
+        startActivity(intent)
     }
 }

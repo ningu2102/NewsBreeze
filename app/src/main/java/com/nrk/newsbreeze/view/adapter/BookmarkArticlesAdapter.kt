@@ -57,10 +57,6 @@ class BookmarkArticlesAdapter(private val listener: OnItemClickListener): ListAd
 
     interface OnItemClickListener{
         fun onItemClicked(article: LocalArticle)
-
-        fun onReadClicked(article: LocalArticle)
-
-        fun onSaveClicked(article: LocalArticle)
     }
 
 

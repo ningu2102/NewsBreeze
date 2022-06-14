@@ -22,7 +22,7 @@
             android:exported="false" />
         <activity
             android:name=".view.NewsDetailActivity"
-            android:exported="false" />
+            android:exported="false"/>
         <activity
             android:name=".view.MainActivity"
             android:exported="true">

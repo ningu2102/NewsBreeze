@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.nrk.newsbreeze.data.model.Article
+import com.nrk.newsbreeze.data.model.LocalArticle
 import com.nrk.newsbreeze.databinding.ActivityMainBinding
 import com.nrk.newsbreeze.utils.QUERY_PAGE_SIZE
 import com.nrk.newsbreeze.utils.Resource
@@ -26,9 +27,10 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
     private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
+    private lateinit var articleAdapter: ArticlesAdapter
+    private lateinit var localArticles: List<LocalArticle>
+    private lateinit var articles: List<Article>
     var isLoading = false
-    var isLastPage = false
-    var isScrolling = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +39,13 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
         supportActionBar!!.hide();
         setUi()
         setupRecyclerView()
+        setupData()
+    }
+
+    private fun setupData() {
+        viewModel.getAllArticles().observe(this) {
+            localArticles = it
+        }
     }
 
     private fun setUi() {
@@ -46,13 +55,12 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
     }
 
     private fun setupRecyclerView() {
-        val articleAdapter = ArticlesAdapter(this)
+        articleAdapter = ArticlesAdapter(this)
 
         binding.apply {
             rvBreakingNews.apply {
                 adapter = articleAdapter
                 setHasFixedSize(true)
-                //addOnScrollListener(this@MainActivity.scrollListener)
             }
         }
 
@@ -62,11 +70,9 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
                     binding.paginationProgressBar.visibility = View.INVISIBLE
                     isLoading = false
                     it.data?.let { newsResponse ->
+                        articles = newsResponse.articles
+                        updateListParameters()
                         articleAdapter.submitList(newsResponse.articles.toList())
-                        val totalPages = newsResponse.totalResults / QUERY_PAGE_SIZE + 2
-                        isLastPage = viewModel.breakingNewsPage == totalPages
-                        if (isLastPage)
-                            binding.rvBreakingNews.setPadding(0, 0, 0, 0)
                     }
                 }
                 is Resource.Error -> {
@@ -84,36 +90,14 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
         }
     }
 
-    private val scrollListener = object : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) { //State is scrolling
-                isScrolling = true
+    private fun updateListParameters() {
+        if(!localArticles.isNullOrEmpty()){
+            for (article in articles){
+                article.isSaved = localArticles.filter { s -> s.url == article.url }.size == 1
             }
-        }
-
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            super.onScrolled(recyclerView, dx, dy)
-
-            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-            val totalVisibleItemCount = layoutManager.childCount
-            val totalItemCount = layoutManager.itemCount
-
-            val isNotLoadingAndNotLastPage = !isLoading && !isLastPage
-            val isAtLastItem = firstVisibleItemPosition + totalVisibleItemCount >= totalItemCount
-            val isNotAtBeginning = firstVisibleItemPosition >= 0
-            val isTotalMoreThanVisible = totalItemCount >= QUERY_PAGE_SIZE
-            val shouldPaginate =
-                isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning && isTotalMoreThanVisible && isScrolling
-
-            if (shouldPaginate) {
-                viewModel.getBreakingNews("tr")
-                isScrolling = false
-            }
+            articleAdapter.submitList(articles.toList())
         }
     }
-
 
     override fun onItemClicked(article: Article) {
         val gson = Gson()
@@ -131,6 +115,8 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
             var response = viewModel.saveNews(article)
             lifecycleScope.launch(Dispatchers.Main) {
                 if (response != 0L) {
+                    localArticles += 
+                    updateListParameters()
                     Toast.makeText(
                         this@MainActivity,
                         "Article saved successfully",

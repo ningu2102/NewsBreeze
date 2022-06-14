@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.nrk.newsbreeze.R
 import com.nrk.newsbreeze.data.model.Article
 import com.nrk.newsbreeze.databinding.ItemArticlePreviewBinding
 import com.nrk.newsbreeze.utils.DateUtil
@@ -57,12 +58,9 @@ class ArticlesAdapter(private val listener: OnItemClickListener): ListAdapter<Ar
                 tvDescription.text = article.description
                 tvTitle.text = article.title
                 tvPublishedAt.text = DateUtil.changeDateFormat(article.publishedAt)
-//                btnRead.setOnClickListener {
-//                    var intent: Intent = Intent(, NewsDetailActivity::class.java)
-//                    intent.putExtra("selectedArticle", article)
-//                    startActivity(intent)
-//                }
-//                tvSource.text = article.source?.name
+                if(article.isSaved == true){
+                    ivSave.setImageResource(R.drawable.ic_saved)
+                }
             }
         }
     }

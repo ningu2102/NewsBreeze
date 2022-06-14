@@ -30,7 +30,10 @@ class MainViewModel @Inject constructor(
 
     init {
         getBreakingNews("in")
+        getAllArticles()
     }
+
+    fun getAllArticles() = newsRepository.getAllArticles()
 
     fun getBreakingNews(countryCode: String) = viewModelScope.launch {
         safeBreakingNewsCall(countryCode)

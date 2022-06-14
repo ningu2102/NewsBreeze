@@ -37,7 +37,6 @@ class BookmarkActivity : AppCompatActivity(), BookmarkArticlesAdapter.OnItemClic
         viewModel.getAllArticles().observe(this) {
             articleAdapter.submitList(it)
         }
-
     }
 
     private fun setupRecyclerView() {

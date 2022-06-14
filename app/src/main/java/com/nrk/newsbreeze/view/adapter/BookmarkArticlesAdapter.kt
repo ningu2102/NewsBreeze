@@ -7,13 +7,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.nrk.newsbreeze.data.model.LocalArticle
+import com.nrk.newsbreeze.databinding.BookmarkArticleItemPreviewBinding
 import com.nrk.newsbreeze.databinding.ItemArticlePreviewBinding
 import com.nrk.newsbreeze.utils.DateUtil
 
 class BookmarkArticlesAdapter(private val listener: OnItemClickListener): ListAdapter<LocalArticle, BookmarkArticlesAdapter.BookmarkArticleViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookmarkArticleViewHolder {
-        val binding = ItemArticlePreviewBinding.inflate(LayoutInflater.from(parent.context), parent,false)
+        val binding = BookmarkArticleItemPreviewBinding.inflate(LayoutInflater.from(parent.context), parent,false)
         return BookmarkArticleViewHolder(binding)
     }
 
@@ -22,7 +23,7 @@ class BookmarkArticlesAdapter(private val listener: OnItemClickListener): ListAd
         holder.bind(currentItem)
     }
 
-    inner class BookmarkArticleViewHolder(private val binding: ItemArticlePreviewBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class BookmarkArticleViewHolder(private val binding: BookmarkArticleItemPreviewBinding): RecyclerView.ViewHolder(binding.root) {
         init {
             binding.apply {
                 root.setOnClickListener {
@@ -30,20 +31,6 @@ class BookmarkArticlesAdapter(private val listener: OnItemClickListener): ListAd
                     if(position != RecyclerView.NO_POSITION){
                         val article = getItem(position)
                         listener.onItemClicked(article)
-                    }
-                }
-                btnRead.setOnClickListener {
-                    val position = adapterPosition
-                    if(position != RecyclerView.NO_POSITION){
-                        val article = getItem(position)
-                        listener.onReadClicked(article)
-                    }
-                }
-                btnSave.setOnClickListener {
-                    val position = adapterPosition
-                    if(position != RecyclerView.NO_POSITION){
-                        val article = getItem(position)
-                        listener.onSaveClicked(article)
                     }
                 }
             }
@@ -54,9 +41,10 @@ class BookmarkArticlesAdapter(private val listener: OnItemClickListener): ListAd
                 Glide.with(itemView)
                     .load(article.urlToImage)
                     .into(ivArticleImage)
-                tvDescription.text = article.description
                 tvTitle.text = article.title
-                tvPublishedAt.text = DateUtil.changeDateFormat(article.publishedAt)
+                tvDate.text = DateUtil.changeDateFormat(article.publishedAt)
+                tvAuthor.text = article.author
+                tvHashTag.text = "#" + article.source!!.name
 //                btnRead.setOnClickListener {
 //                    var intent: Intent = Intent(, NewsDetailActivity::class.java)
 //                    intent.putExtra("selectedArticle", article)

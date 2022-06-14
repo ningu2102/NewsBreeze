@@ -10,7 +10,6 @@ class ArticleToLocalArticleMapper {
 
     fun toArticle(localArticle: LocalArticle): Article {
         return Article(
-            null,
             localArticle.author,
             localArticle.content,
             localArticle.description,

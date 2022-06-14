@@ -5,11 +5,11 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 import com.nrk.newsbreeze.data.model.Article
 import com.nrk.newsbreeze.databinding.ActivityNewsDetailBinding
 import com.nrk.newsbreeze.viewmodel.NewsDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.InternalCoroutinesApi
 
 @AndroidEntryPoint
 class NewsDetailActivity : AppCompatActivity() {
@@ -20,7 +20,8 @@ class NewsDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityNewsDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        article = intent.getParcelableExtra("selectedArticle")!!
+        val gson = Gson()
+        article = gson.fromJson(intent.getStringExtra("selectedArticle"), Article::class.java)
         setUi()
     }
 
@@ -29,10 +30,8 @@ class NewsDetailActivity : AppCompatActivity() {
             val article = article
             webView.apply {
                 webViewClient = WebViewClient()
-                if (article != null) {
-                    article.url?.let {
-                        loadUrl(article.url.toString())
-                    }
+                article.url?.let {
+                    loadUrl(article.url.toString())
                 }
             }
 
@@ -40,20 +39,12 @@ class NewsDetailActivity : AppCompatActivity() {
                 if (article != null) {
                     viewModel.saveArticle(article)
                 }
-                Toast.makeText(this@NewsDetailActivity, "Note saved successfully", Toast.LENGTH_SHORT).show()
-
+                Toast.makeText(
+                    this@NewsDetailActivity,
+                    "Note saved successfully",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
-
-//        this.lifecycleScope.launchWhenCreated {
-//            viewModel.articleEvent.collect { event ->
-//                when (event) {
-//                    is ArticleViewModel.ArticleEvent.ShowArticleSavedMessage -> {
-//                        Snackbar.make(requireView(), event.message, Snackbar.LENGTH_SHORT).show()
-//                    }
-//                }
-//            }
-//        }
-
     }
 }

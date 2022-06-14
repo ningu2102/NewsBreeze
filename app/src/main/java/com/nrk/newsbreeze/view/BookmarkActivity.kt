@@ -23,6 +23,7 @@ class BookmarkActivity : AppCompatActivity(), BookmarkArticlesAdapter.OnItemClic
         super.onCreate(savedInstanceState)
         binding = ActivityBookmarkBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar!!.hide()
         setupRecyclerView()
         setupData()
     }

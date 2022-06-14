@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.nrk.newsbreeze.data.model.Article
 import com.nrk.newsbreeze.databinding.ActivityMainBinding
 import com.nrk.newsbreeze.utils.QUERY_PAGE_SIZE
@@ -115,17 +116,13 @@ class MainActivity : AppCompatActivity(), ArticlesAdapter.OnItemClickListener {
 
 
     override fun onItemClicked(article: Article) {
-//        article.id = 10
-        var selectedArticle = article
-        selectedArticle.id = 10
-        var intent: Intent = Intent(this@MainActivity, NewsDetailActivity::class.java)
-        intent.putExtra("selectedArticle", selectedArticle)
+        val gson = Gson()
+        val intent = Intent(this, NewsDetailActivity::class.java)
+        intent.putExtra("selectedArticle", gson.toJson(article))
         startActivity(intent)
     }
 
     override fun onReadClicked(article: Article) {
-
-
     }
 
     override fun onSaveClicked(article: Article) {
